@@ -16,11 +16,17 @@ app.use((req, res, next) => {
   next();
 });
 
-// 2. PARSEAR CUERPO DE PETICIONES JSON (Para leer los datos de Agregar/Editar)
+// 2. PARSEAR CUERPO DE PETICIONES JSON
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// RUTA PRINCIPAL DEL BACKEND (Mensaje limpio al entrar a la raíz de Render)
+app.get('/', (req, res) => {
+  res.json({ message: 'API del Sistema de Ventas conectada y activa' });
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 3. RUTAS
