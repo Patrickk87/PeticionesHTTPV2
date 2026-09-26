@@ -16,7 +16,6 @@ export default function Clientes() {
   });
   const [editando, setEditando] = useState(false);
 
-  // Obtener la lista
   const cargarClientes = async () => {
     try {
       setLoading(true);
@@ -40,7 +39,6 @@ export default function Clientes() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Guardar (Agregar o Editar)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -60,7 +58,7 @@ export default function Clientes() {
       limpiarFormulario();
       cargarClientes();
     } catch (err) {
-      alert('Error al guardar datos');
+      alert('Error al guardar el cliente');
     }
   };
 
@@ -75,7 +73,7 @@ export default function Clientes() {
       await fetch(`${API_URL}/clientes/${id}`, { method: 'DELETE' });
       cargarClientes();
     } catch (err) {
-      alert('Error al eliminar cliente');
+      alert('Error al eliminar el cliente');
     }
   };
 
@@ -85,7 +83,7 @@ export default function Clientes() {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ padding: '20px', maxWidth: '900px', margin: '0 auto' }}>
       <h2>Gestión de Clientes</h2>
 
       {/* FORMULARIO AGREGAR / EDITAR */}
@@ -132,12 +130,12 @@ export default function Clientes() {
         )}
       </form>
 
-      {/* LISTADO */}
+      {/* TABLA CON BOTONES ACCIONES */}
       {loading && <p>Cargando datos...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {!loading && !error && (
-        <table border="1" cellPadding="8" style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table border="1" cellPadding="8" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
             <tr>
               <th>ID</th>
