@@ -1,0 +1,14 @@
+const express = require('express');
+const router = express.Router();
+const db = require('../config/db');
+
+router.get('/', async (req, res) => {
+  try {
+    const [Clientes] = await db.query('SELECT * FROM clientes');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+module.exports = router;

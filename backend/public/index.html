@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Usuarios</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    h1 { color: #333; }
+    form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 8px;
+      flex: 1;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
+    ul { list-style: none; padding: 0; }
+    li {
+      background: #f4f4f4;
+      margin: 8px 0;
+      padding: 10px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 4px;
+    }
+    .btn-delete {
+      background-color: #dc3545;
+      padding: 4px 8px;
+    }
+    .btn-delete:hover { background-color: #bd2130; }
+  </style>
+</head>
+<body>
+
+  <h1>Gestión de Usuarios</h1>
+
+  <!-- Formulario para agregar usuario (POST) -->
+  <form id="formUsuario">
+    <input type="text" id="nombre" placeholder="Nombre" required />
+    <input type="email" id="email" placeholder="Correo electrónico" required />
+    <button type="submit">Agregar</button>
+  </form>
+
+  <!-- Lista de usuarios (GET) -->
+  <h2>Lista de Usuarios</h2>
+  <ul id="listaUsuarios"></ul>
+
+  <script>
+    const API_URL = '/usuarios';
+
+    // 1. Obtener y mostrar usuarios (GET)
+    async function cargarUsuarios() {
+      const res = await fetch(API_URL);
+      const respuesta = await res.json();
+      
+      const lista = document.getElementById('listaUsuarios');
+      lista.innerHTML = '';
+
+      respuesta.data.forEach(usuario => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span><strong>${usuario.nombre}</strong> (${usuario.email})</span>
+          <button class="btn-delete" onclick="eliminarUsuario(${usuario.id})">Eliminar</button>
+        `;
+        lista.appendChild(li);
+      });
+    }
+
+    // 2. Crear usuario (POST)
+    document.getElementById('formUsuario').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nombre = document.getElementById('nombre').value;
+      const email = document.getElementById('email').value;
+
+      await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, email })
+      });
+
+      document.getElementById('nombre').value = '';
+      document.getElementById('email').value = '';
+      cargarUsuarios();
+    });
+
+    // 3. Eliminar usuario (DELETE)
+    async function eliminarUsuario(id) {
+      await fetch(`${API_URL}/${id}`, {
+        method: 'DELETE'
+      });
+      cargarUsuarios();
+    }
+
+    // Cargar la lista al abrir la página
+    cargarUsuarios();
+  </script>
+</body>
+</html>
